@@ -8,20 +8,20 @@ var parse = (function () {
   var ops = {
     '+': function () {
       data[ptr] = data[ptr] || 0;
-      data[ptr]++;
+      data[ptr] = (data[ptr]==255) ? 0 : data[ptr]+1;
       debug && console.log('+', data[ptr], ptr);
     },
 
     '-': function () {
       data[ptr] = data[ptr] || 0;
-      data[ptr]--;
+      data[ptr] = (data[ptr]==0) ? 255 : data[ptr]-1;
       debug && console.log('-', data[ptr], ptr);
     },
 
     '<': function () {
       ptr--;
       if (ptr < 0) {
-        ptr = 0; //Don't allow pointer to leave data array
+        throw "Pointer can't go below zero."; //Don't allow pointer to leave data array
       }
       debug && console.log('<', ptr);
     },
@@ -67,7 +67,7 @@ var parse = (function () {
       var loopCounter = 0;
 
       while(data[ptr] > 0) {
-        if (loopCounter++ > 10000) { throw "Infinite loop detected"; }
+        if (loopCounter++ > 10000) { throw "Infinite loop detected."; }
 
         nodes.forEach(function (node) {
           node();
